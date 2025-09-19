@@ -1,22 +1,9 @@
 
 import React from 'react';
-// FIX: Add file extension to type and component imports.
-import type { PaginatedSearchResults, SearchResultItem } from '../types.ts';
+import type { SearchResultItem } from '../types.ts';
 import { InfoIcon, WarningIcon } from './Icons.tsx';
 import Spinner from './Spinner.tsx';
-
-interface ResultsListProps {
-    results: PaginatedSearchResults | null;
-    isLoading: boolean;
-    error: string | null;
-    selectedItems: SearchResultItem[];
-    onSelectItem: (item: SearchResultItem) => void;
-    onViewItem: (item: SearchResultItem) => void;
-    onPageChange: (page: number) => void;
-    onSummarize: () => void;
-    onCompare: () => void;
-    query: string;
-}
+import { useAppContext } from '../context/AppContext.tsx';
 
 const ResultsListItem: React.FC<{ 
     item: SearchResultItem; 
@@ -80,11 +67,19 @@ const Pagination: React.FC<{
     );
 };
 
-
-const ResultsList: React.FC<ResultsListProps> = ({ 
-    results, isLoading, error, selectedItems, onSelectItem, 
-    onViewItem, onPageChange, onSummarize, onCompare, query
-}) => {
+const ResultsList: React.FC = () => {
+    const {
+        searchResults: results,
+        isLoadingSearch: isLoading,
+        searchError: error,
+        selectedItems,
+        handleSelectItem: onSelectItem,
+        handleViewItem: onViewItem,
+        handlePageChange: onPageChange,
+        handleSummarize: onSummarize,
+        handleCompare: onCompare,
+        query,
+    } = useAppContext();
 
     const canSummarize = selectedItems.length === 1;
     const canCompare = selectedItems.length > 1;
@@ -119,10 +114,8 @@ const ResultsList: React.FC<ResultsListProps> = ({
     }
     
     if (!results) {
-        // This case is now handled by the main welcome screen
         return null;
     }
-
 
     return (
         <div>

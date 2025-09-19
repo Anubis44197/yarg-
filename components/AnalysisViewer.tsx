@@ -1,13 +1,9 @@
 
 import React from 'react';
-// FIX: Corrected import path for types from parent directory.
-import type { AnalysisAction, SearchResultItem } from '../types.ts';
-// FIX: Corrected import path for types from parent directory.
 import { AnalysisAction as AA } from '../types.ts';
-// FIX: Corrected import path for Spinner component from current directory.
 import Spinner from './Spinner.tsx';
-// FIX: Corrected import path for Icon components from current directory.
 import { WarningIcon, InfoIcon, CloseIcon } from './Icons.tsx';
+import { useAppContext } from '../context/AppContext.tsx';
 
 // A simple but effective markdown-to-jsx parser
 const SimpleMarkdown: React.FC<{ content: string }> = ({ content }) => {
@@ -44,16 +40,16 @@ const SimpleMarkdown: React.FC<{ content: string }> = ({ content }) => {
     );
 };
 
-interface AnalysisViewerProps {
-  result: string;
-  isLoading: boolean;
-  error: string | null;
-  action: AnalysisAction | null;
-  selectedDocuments: SearchResultItem[];
-  onClose?: () => void;
-}
 
-const AnalysisViewer: React.FC<AnalysisViewerProps> = ({ result, isLoading, error, action, selectedDocuments, onClose }) => {
+const AnalysisViewer: React.FC = () => {
+  const {
+      analysisResult: result,
+      isLoadingAnalysis: isLoading,
+      analysisError: error,
+      analysisAction: action,
+      selectedItems: selectedDocuments
+  } = useAppContext();
+
   const getLoadingMessage = (): string => {
     if (action === AA.SUMMARIZE) {
       return `"${selectedDocuments[0]?.title}" başlıklı belge özetleniyor...`;
@@ -68,11 +64,6 @@ const AnalysisViewer: React.FC<AnalysisViewerProps> = ({ result, isLoading, erro
     <div className="bg-slate-800/50 p-6 rounded-lg border border-slate-700 sticky top-8 h-[calc(100vh-4rem)] flex flex-col">
       <div className="flex justify-between items-center pb-4 border-b border-slate-700 mb-4">
         <h2 className="text-lg font-bold text-slate-100">Gemini Analizi</h2>
-        {onClose && (
-            <button onClick={onClose} className="text-slate-400 hover:text-white transition-colors p-1 rounded-full">
-                <CloseIcon className="h-6 w-6" />
-            </button>
-        )}
       </div>
       <div className="flex-grow overflow-y-auto pr-2">
         {isLoading && (

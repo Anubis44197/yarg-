@@ -1,7 +1,10 @@
+
 import React, { useState, useEffect } from 'react';
 import type { DocumentSource, SearchFilters } from '../types';
 import { DS } from '../types';
 import { CloseIcon, ChevronDownIcon, CheckCircleIcon } from './Icons';
+import { useAppContext } from '../context/AppContext.tsx';
+
 
 // Data for filters, this could come from an API in a real app
 const yargitayDaireleri = ["1. Hukuk Dairesi", "2. Hukuk Dairesi", "3. Hukuk Dairesi", "4. Hukuk Dairesi", "1. Ceza Dairesi", "2. Ceza Dairesi", "3. Ceza Dairesi", "Ceza Genel Kurulu", "Hukuk Genel Kurulu"];
@@ -14,15 +17,15 @@ const sourceHasFilters = (source: DocumentSource): boolean => {
 
 const ALL_SOURCES = Object.values(DS);
 
-interface SourceSelectionModalProps {
-    isOpen: boolean;
-    onClose: () => void;
-    onContinue: (sources: DocumentSource[], filters: Partial<SearchFilters>) => void;
-    currentSelection: DocumentSource[];
-    currentFilters: Partial<SearchFilters>;
-}
+const SourceSelectionModal: React.FC = () => {
+    const {
+        isSourceModalOpen: isOpen,
+        closeSourceModal: onClose,
+        handleSourceSelectionContinue: onContinue,
+        selectedSources: currentSelection,
+        filters: currentFilters
+    } = useAppContext();
 
-const SourceSelectionModal: React.FC<SourceSelectionModalProps> = ({ isOpen, onClose, onContinue, currentSelection, currentFilters }) => {
     const [localSelection, setLocalSelection] = useState<DocumentSource[]>([]);
     const [localFilters, setLocalFilters] = useState<Partial<SearchFilters>>({});
     const [expandedSources, setExpandedSources] = useState<DocumentSource[]>([]);

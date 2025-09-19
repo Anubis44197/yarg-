@@ -1,20 +1,16 @@
 
 import React, { useEffect } from 'react';
-// FIX: Add file extension to type import.
-import type { Document } from '../types.ts';
-// FIX: Add file extension to icon import.
 import { CloseIcon, WarningIcon } from './Icons.tsx';
-// FIX: Add file extension to component import.
 import Spinner from './Spinner.tsx';
+import { useAppContext } from '../context/AppContext.tsx';
 
-interface DocumentViewerModalProps {
-    document: Document | null;
-    isLoading: boolean;
-    onClose: () => void;
-    error: string | null;
-}
-
-const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({ document, isLoading, onClose, error }) => {
+const DocumentViewerModal: React.FC = () => {
+    const {
+        viewingDocument: document,
+        isLoadingDocument: isLoading,
+        documentError: error,
+        handleCloseDocument: onClose,
+    } = useAppContext();
     
     useEffect(() => {
         const handleEsc = (event: KeyboardEvent) => {
@@ -27,6 +23,10 @@ const DocumentViewerModal: React.FC<DocumentViewerModalProps> = ({ document, isL
            window.removeEventListener('keydown', handleEsc);
         };
     }, [onClose]);
+
+    if (!document) {
+        return null;
+    }
 
     return (
         <div 

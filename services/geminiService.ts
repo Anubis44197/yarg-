@@ -1,13 +1,8 @@
 import { GoogleGenAI, Chat, GenerateContentResponse } from "@google/genai";
 import type { Document } from '../types';
-import { API_KEY } from '../apiKey'; // API anahtarını buradan import ediyoruz
 
-if (!API_KEY) {
-    throw new Error("API_KEY in apiKey.ts is not set");
-}
-
-// FIX: Initialize GoogleGenAI with a named parameter for the API key.
-const ai = new GoogleGenAI({ apiKey: API_KEY });
+// FIX: Initialize GoogleGenAI with a named parameter for the API key from process.env, as per the coding guidelines. This resolves the 'import.meta.env' error.
+const ai = new GoogleGenAI({ apiKey: process.env.API_KEY });
 // FIX: Use the correct model name 'gemini-2.5-flash'.
 const model = 'gemini-2.5-flash';
 

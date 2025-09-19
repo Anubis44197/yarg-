@@ -1,15 +1,8 @@
-import React, { useState, useEffect } from 'react';
-// FIX: Add file extension to type import.
-import { DocumentSource, SearchFilters, DS } from '../types.ts';
 
-interface FilterPanelProps {
-    selectedSources: DocumentSource[];
-    filters: Partial<SearchFilters>;
-    onFilterChange: (filters: Partial<SearchFilters>) => void;
-    onSearch: (filters: Partial<SearchFilters>) => void;
-    onClose: () => void;
-    isLoading: boolean;
-}
+import React, { useState, useEffect } from 'react';
+import { DocumentSource, SearchFilters, DS } from '../types.ts';
+import { useAppContext } from '../context/AppContext.tsx';
+
 
 // Demo data - in a real app, this would come from an API
 const yargitayDaireleri = [
@@ -23,7 +16,17 @@ const sayistayDaireleri = [
 ];
 
 
-const FilterPanel: React.FC<FilterPanelProps> = ({ selectedSources, filters, onFilterChange, onSearch, onClose, isLoading }) => {
+const FilterPanel: React.FC = () => {
+    const {
+        selectedSources,
+        filters,
+        setFilters: onFilterChange,
+        performSearch,
+        toggleFilterPanel: onClose,
+        isLoadingSearch: isLoading,
+        isFilterPanelOpen,
+        query,
+    } = useAppContext();
 
     const [localFilters, setLocalFilters] = useState(filters);
 
@@ -41,11 +44,10 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ selectedSources, filters, onF
     const showDanistayFilter = selectedSources.includes(DS.DANISTAY);
     const showSayistayFilter = selectedSources.includes(DS.SAYISTAY);
     
-    // A generic date filter can be shown for many sources
     const showDateFilter = selectedSources.length > 0;
     
     const handleSearchClick = () => {
-        onSearch(localFilters);
+        performSearch(query, 1, localFilters);
         onClose();
     };
 
@@ -81,6 +83,10 @@ const FilterPanel: React.FC<FilterPanelProps> = ({ selectedSources, filters, onF
              />
         </div>
     );
+
+    if (!isFilterPanelOpen) {
+        return null;
+    }
 
     return (
         <div className="absolute top-full mt-2 w-full max-w-xl left-1/2 -translate-x-1/2 bg-slate-800 p-6 rounded-lg border border-slate-700 shadow-2xl z-20">

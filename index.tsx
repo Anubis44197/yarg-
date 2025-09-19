@@ -1,8 +1,8 @@
 
 import React from 'react';
 import ReactDOM from 'react-dom/client';
-// FIX: Explicitly specify the file extension to resolve the module.
 import App from './App.tsx';
+import { AppProvider } from './context/AppContext.tsx';
 
 const rootElement = document.getElementById('root');
 if (!rootElement) {
@@ -12,6 +12,8 @@ if (!rootElement) {
 const root = ReactDOM.createRoot(rootElement);
 root.render(
   <React.StrictMode>
-    <App />
+    <AppProvider>
+      <App />
+    </AppProvider>
   </React.StrictMode>
 );

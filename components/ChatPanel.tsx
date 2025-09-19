@@ -1,20 +1,14 @@
 
 
 import React, { useState, useRef, useEffect } from 'react';
-// FIX: Add file extension to type import.
 import type { ChatMessage } from '../types.ts';
-// FIX: Add file extension to service import.
 import { getChatResponse } from '../services/geminiService.ts';
-// FIX: Add file extension to icon import.
 import { SendIcon } from './Icons.tsx';
-// FIX: Add file extension to component import.
 import Spinner from './Spinner.tsx';
+import { useAppContext } from '../context/AppContext.tsx';
 
-interface ChatPanelProps {
-    analysisContext: string; // The analysis result from Gemini
-}
-
-const ChatPanel: React.FC<ChatPanelProps> = ({ analysisContext }) => {
+const ChatPanel: React.FC = () => {
+    const { analysisResult: analysisContext } = useAppContext();
     const [messages, setMessages] = useState<ChatMessage[]>([]);
     const [input, setInput] = useState('');
     const [isLoading, setIsLoading] = useState(false);
@@ -45,7 +39,7 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ analysisContext }) => {
         }));
         
         // Add the analysis context to the history for the first user message
-        if (history.length === 0) {
+        if (history.length === 0 && analysisContext) {
             history.unshift({
                 role: 'model',
                 parts: [{ text: `İşte analiz edilen belgelerin özeti: ${analysisContext}` }]
@@ -61,6 +55,8 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ analysisContext }) => {
         setMessages(prev => [...prev, newModelMessage]);
         setIsLoading(false);
     };
+
+    if (!analysisContext) return null;
 
     return (
         <div className="bg-slate-800/50 p-4 rounded-lg border border-slate-700 mt-6 flex flex-col max-h-[50vh]">
@@ -111,5 +107,4 @@ const ChatPanel: React.FC<ChatPanelProps> = ({ analysisContext }) => {
     );
 };
 
-// FIX: Add default export to make the component available for import.
 export default ChatPanel;
