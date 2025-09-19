@@ -1,0 +1,5 @@
+{
+  "name": "Yargı AI - Yapay Zeka Destekli Hukuki Belge Arama",
+  "description": "Yargı kararlarını ve hukuki belgeleri aramak, karşılaştırmak ve özetlemek için Gemini API'sini kullanan gelişmiş bir web uygulaması. Kullanıcıların Bedesten, Yargıtay gibi çeşitli kaynaklardan belgeleri analiz etmesine olanak tanır.",
+  "requestFramePermissions": []
+}
